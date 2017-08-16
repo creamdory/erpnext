@@ -44,9 +44,21 @@
 
 <div class="row transaction-contact">
     <div class="col-xs-6 text-muted small">
-        {{ doc.contact_display }}
+        {{ _("Contact") }} : {{ doc.contact_display }}
     </div>
 </div>
+{% if doc.doctype == 'Quotation'%}
+<div class="row transaction-inquiry">
+    <div class="col-xs-6 text-muted small">
+        {{ _("Customer Inquiry") }} : {{ doc.customer_inquiry }}
+    </div>
+</div>
+<div class="row transaction-ticket">
+    <div class="col-xs-6 text-muted small">
+         {{ _("Service Ticket") }} : {{ doc.helpscout_ticket }}
+    </div>
+</div>
+{% endif %}
 
 {% if doc._header %}
 {{ doc._header }}

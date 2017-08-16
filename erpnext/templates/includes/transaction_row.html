@@ -10,20 +10,25 @@
 				</div>
 				{% if doc.doctype == 'Quotation'%}
 				<div class="small text-muted valid-till">
-					Valid Till {{ doc.valid_till }}
+					{{ _("Valid Till") }} {{ doc.valid_till }}
 				</div>
 				{% endif %}
 			</div>
 			<div class="col-sm-6">
-				<span class="small text-muted customer-supplier">
+				<span class="small text-muted customer-supplier ellipsis">
 					{% if doc.doctype == 'Supplier Quotation' %}
 						<b>{{ doc.supplier_name}}</b>
 					{% else %}
 						<b>{{ doc.customer_name}}</b>
 					{% endif %}
 				</span>
+				{% if doc.doctype == 'Quotation'%}
+				<div class="small text-muted valid-till">
+					{{ _("Type") }} : {{ doc.quotation_type }}
+				</div>
+				{% endif %}
 				<div class="small text-muted contact">
-					Contact : {{ doc.contact_display}}
+					{{ _("Contact") }} : {{ doc.contact_display}}
 				</div >
 				<div class="small text-muted items-preview ellipsis ">
 					{{ doc.items_preview }}
