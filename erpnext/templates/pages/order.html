@@ -43,6 +43,18 @@
 	<br>
 	{{ doc.contact_display }}
 {% endif %}
+{% if doc.quotation_type %}
+	<br>
+	{{ doc.quotation_type }}
+{% endif %}
+{% if doc.customer_inquiry %}
+	<br>
+	{{ doc.customer_inquiry }}
+{% endif %}
+{% if doc.helpscout_ticket %}
+	<br>
+	{{ doc.helpscout_ticket }}
+{% endif %}
 </p>
 
 {% if doc._header %}
