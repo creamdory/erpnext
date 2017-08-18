@@ -8,11 +8,26 @@
 					title="{{ frappe.utils.format_datetime(doc.modified, "medium") }}">
 					{{ frappe.utils.global_date_format(doc.modified) }}
 				</div>
+				{% if doc.valid_till %}
+				<div class="small text-muted transaction-time">
+					{{ _("Valid Till") }} {{ frappe.utils.global_date_format(doc.valid_till) }}
+				</div>
+				{% endif %}
 			</div>
 			<div class="col-sm-5">
-				<div class="small text-muted items-preview ellipsis">
+				<div class="small items-preview ellipsis">
 					{{ doc.items_preview }}
 				</div>
+				{% if doc.quotation_type %}
+				<div class="small text-muted">
+					{{ doc.quotation_type }}
+				</div>
+				{% endif %}
+				{% if doc.contact_display %}
+				<div class="small text-muted">
+					{{ doc.contact_display }}
+				</div>
+				{% endif %}
 			</div>
 			<div class="col-sm-3 text-right bold">
 				{{ doc.get_formatted("grand_total") }}
