@@ -178,6 +178,10 @@ def get_data():
 			"items": [
 				{
 					"type": "doctype",
+					"name": "Training"
+				},
+				{
+					"type": "doctype",
 					"name": "Training Event"
 				},
 				{
