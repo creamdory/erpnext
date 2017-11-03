@@ -310,7 +310,8 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 							project: item.project || me.frm.doc.project,
 							qty: item.qty || 1,
 							stock_qty: item.stock_qty,
-							conversion_factor: item.conversion_factor
+							conversion_factor: item.conversion_factor,
+							uom : item.uom
 						}
 					},
 
@@ -618,6 +619,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 				}
 			});
 		}
+		this.apply_price_list(frappe.get_doc(cdt, cdn), true);
 	},
 
 	conversion_factor: function(doc, cdt, cdn, dont_fetch_price_list_rate) {
@@ -641,6 +643,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 
 	qty: function(doc, cdt, cdn) {
 		this.conversion_factor(doc, cdt, cdn, true);
+		this.apply_price_list(frappe.get_doc(cdt, cdn), true);
 		this.apply_pricing_rule(frappe.get_doc(cdt, cdn), true);
 	},
 
@@ -876,6 +879,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 					"item_group": d.item_group,
 					"brand": d.brand,
 					"qty": d.qty,
+					"uom": d.uom,
 					"parenttype": d.parenttype,
 					"parent": d.parent,
 					"pricing_rule": d.pricing_rule,
