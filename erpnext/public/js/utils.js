@@ -324,6 +324,95 @@ erpnext.utils.select_alternate_items = function(opts) {
 	dialog.show();
 }
 
+erpnext.utils.update_child_items = function(opts) {
+	const frm = opts.frm;
+
+	this.data = [];
+	const dialog = new frappe.ui.Dialog({
+		title: __("Update Items"),
+		fields: [
+			{fieldtype:'Section Break', label: __('Items')},
+			{
+				fieldname: "trans_items", fieldtype: "Table", cannot_add_rows: true,
+				in_place_edit: true, data: this.data,
+				get_data: () => {
+					return this.data;
+				},
+				fields: [{
+					fieldtype:'Data',
+					fieldname:"docname",
+					hidden: 0,
+				}, {
+					fieldtype:'Link',
+					fieldname:"item_code",
+					options: 'Item',
+					in_list_view: 1,
+					read_only: 1,
+					label: __('Item Code')
+				}, {
+					fieldtype:'Float',
+					fieldname:"qty",
+					default: 0,
+					read_only: 0,
+					in_list_view: 1,
+					label: __('Qty')
+				}, {
+					fieldtype:'Currency',
+					fieldname:"rate",
+					default: 0,
+					read_only: 0,
+					in_list_view: 1,
+					label: __('Rate')
+				}]
+			},
+		],
+		primary_action: function() {
+			const trans_items = this.get_values()["trans_items"];
+			trans_items.forEach(d => {
+				let row = frappe.get_doc(opts.child_doctype, d.docname);
+				let item_code = d.item_code;
+				let qty = d.qty;
+				let rate = d.rate;
+				console.log(d.qty)
+				frappe.call({
+					method: 'erpnext.buying.doctype.purchase_order.purchase_order.update_child_qty_rate',
+					args: {
+						'name': d.docname,
+						'rate': d.rate,
+						'qty': d.qty
+					},
+					callback: function(r) {
+						cur_frm.reload();
+						refresh_field(opts.child_docname);
+					}
+			});
+				frappe.model.set_value(opts.child_doctype, d.docname, 'qty', d.qty);
+				frappe.model.set_value(opts.child_doctype, d.docname, 'rate', d.rate);
+				console.log(cur_frm.doc.items[0].qty)
+			});
+			refresh_field(opts.child_docname);
+			this.hide();
+			console.log(cur_frm.doc.items[0].qty)
+			},
+		primary_action_label: __('Update')
+	});
+
+	frm.doc[opts.child_docname].forEach(d => {
+		if (d.qty > d.received_qty) {
+			var qty = d.qty - d.received_qty
+			dialog.fields_dict.trans_items.df.data.push({
+				"docname": d.name,
+				"item_code": d.item_code,
+				"qty": qty,
+				"rate": d.rate,
+			});
+		}
+		this.data = dialog.fields_dict.trans_items.df.data;
+		dialog.fields_dict.trans_items.grid.refresh();
+	})
+	dialog.show();
+}
+
 erpnext.utils.map_current_doc = function(opts) {
 	if(opts.get_query_filters) {
 		opts.get_query = function() {

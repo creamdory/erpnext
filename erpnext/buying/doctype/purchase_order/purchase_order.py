@@ -69,7 +69,7 @@ class PurchaseOrder(BuyingController):
 			},
 			"Supplier Quotation Item": {
 				"ref_dn_field": "supplier_quotation_item",
-				"compare_fields": [["project", "="], ["item_code", "="], 
+				"compare_fields": [["project", "="], ["item_code", "="],
 					["uom", "="], ["conversion_factor", "="]],
 				"is_child_table": True
 			}
@@ -470,3 +470,20 @@ def update_status(status, name):
 	po = frappe.get_doc("Purchase Order", name)
 	po.update_status(status)
 	po.update_delivered_qty_in_sales_order()
+
+@frappe.whitelist()
+def update_child_qty_rate(name, rate, qty):
+	# po = frappe.get_doc("Purchase Order", parent)
+	po_item = frappe.get_doc("Purchase Order Item", name)
+	amount = float(rate) * float(qty)
+	po_item.qty = qty
+	po_item.rate = rate
+	po_item.amount = amount
+
+	frappe.db.sql("""Update `tabPurchase Order Item` set rate = %s,
+		qty = %s, amount = %s where name = %s""", (rate, qty, amount, name))
+	frappe.db.commit()
+	print("Im hereeeeee")
+	print(po_item.qty)
+	print(po_item.rate)
+	print(po_item.amount)
